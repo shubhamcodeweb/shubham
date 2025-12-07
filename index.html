@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday! 🎉</title>
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Arial', sans-serif; background: linear-gradient(135deg, #ff9a9e, #fecfef, #fecfef); height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .page { display: none; width: 100%; height: 100vh; flex-direction: column; text-align: center; color: #333; }
+        .page.active { display: flex; }
+        h1 { font-size: 4em; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); animation: bounce 2s infinite; }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-20px); } 60% { transform: translateY(-10px); } }
+        .balloon { font-size: 10em; cursor: pointer; transition: all 0.3s; margin: 20px; }
+        .balloon:hover { transform: scale(1.1); }
+        .pop { animation: pop 0.5s forwards; }
+        @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.5); } 100% { transform: scale(0); opacity: 0; } }
+        .wishes { background: rgba(255,255,255,0.9); padding: 40px; border-radius: 20px; max-width: 600px; margin: 20px auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .wishes p { font-size: 1.5em; line-height: 1.6; margin: 20px 0; }
+        .gift { font-size: 8em; cursor: pointer; margin: 40px; transition: transform 0.3s; }
+        .gift:hover { transform: scale(1.1) rotate(5deg); }
+        .video-container { display: none; width: 80%; height: 50%; background: #000; margin: 20px auto; border-radius: 10px; overflow: hidden; }
+        video { width: 100%; height: 100%; object-fit: cover; }
+        .upload-btn { background: #ff6b6b; color: white; border: none; padding: 15px 30px; font-size: 1.2em; border-radius: 50px; cursor: pointer; margin: 20px; transition: background 0.3s; }
+        .upload-btn:hover { background: #ff5252; }
+        input[type="file"] { display: none; }
+        .btn { background: #4ecdc4; color: white; border: none; padding: 15px 30px; font-size: 1.2em; border-radius: 50px; cursor: pointer; margin: 20px; transition: all 0.3s; }
+        .btn:hover { background: #45b7aa; transform: translateY(-2px); }
+        .hearts { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; }
+        .heart { position: absolute; font-size: 2em; color: #ff69b4; animation: float 6s infinite linear; }
+        @keyframes float { 0% { transform: translateY(100vh) rotate(0deg); opacity: 1; } 100% { transform: translateY(-100px) rotate(360deg); opacity: 0; } }
+    </style>
+</head>
+<body>
+    <div class="hearts" id="hearts"></div>
+
+    <!-- Page 1: Welcome -->
+    <div id="page1" class="page active">
+        <h1>Welcome, Love! 💕</h1>
+        <div class="balloon" onclick="popBalloon()">🎈</div>
+        <p>Click the balloon to start the surprise!</p>
+    </div>
+
+    <!-- Page 2: Wishes -->
+    <div id="page2" class="page">
+        <div class="wishes">
+            <h1>Happy Birthday, My Love! 🎂❤</h1>
+            <p>On this special day, I want you to know how much you mean to me. You light up my world every single day with your smile, kindness, and endless love.</p>
+            <p>Here's to more adventures, laughter, and creating beautiful memories together. You deserve all the happiness in the universe!</p>
+            <p>I love you more than words can say. Forever yours. 💖</p>
+            <button class="btn" onclick="nextPage('page3')">Continue to Surprise →</button>
+        </div>
+    </div>
+
+    <!-- Page 3: Surprise Gift -->
+    <div id="page3" class="page">
+        <h1>Surprise! 🎁✨</h1>
+        <div class="gift" onclick="openGift()">🎁</div>
+        <p>Click the gift box for something special!</p>
+        <div id="videoContainer" class="video-container">
+            <video id="birthdayVideo" controls>
+                <source id="videoSource" src="" type="video/mp4">
+                Your browser does not support video.
+            </video>
+            <br>
+            <label for="videoUpload" class="upload-btn">Upload Your Video</label>
+            <input type="file" id="videoUpload" accept="video/*" onchange="playVideo(event)">
+            <br>
+            <button class="btn" onclick="prevPage('page2')">Back</button>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+
+        function popBalloon() {
+            const balloon = document.querySelector('.balloon');
+            balloon.classList.add('pop');
+            setTimeout(() => {
+                document.getElementById('page1').classList.remove('active');
+                document.getElementById('page2').classList.add('active');
+                createHearts();
+            }, 500);
+        }
+
+        function nextPage(pageId) {
+            document.getElementById('page' + currentPage).classList.remove('active');
+            document.getElementById(pageId).classList.add('active');
+            currentPage = pageId === 'page3' ? 3 : 2;
+        }
+
+        function prevPage(pageId) {
+            document.getElementById('page' + currentPage).classList.remove('active');
+            document.getElementById(pageId).classList.add('active');
+            currentPage = 2;
+        }
+
+        function openGift() {
+            document.querySelector('.gift').style.display = 'none';
+            document.getElementById('videoContainer').style.display = 'block';
+        }
+
+        function playVideo(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                const video = document.getElementById('birthdayVideo');
+                const source = document.getElementById('videoSource');
+                source.src = url;
+                video.load();
+                video.play();
+            }
+        }
+
+        function createHearts() {
+            const heartsContainer = document.getElementById('hearts');
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart';
+                    heart.innerHTML = '💖';
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                    heartsContainer.appendChild(heart);
+                    setTimeout(() => heart.remove(), 7000);
+                }, i * 200);
+            }
+        }
+    </script>
+</body>
+</html>
